@@ -37,11 +37,7 @@ var BootstrapPasswordStrength = function (_Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BootstrapPasswordStrength).call(this, props));
 
     _this.handleInput = _this.handleInput.bind(_this);
-
-    _this.state = {
-      password: props.password
-    };
-
+    _this.state = {};
     return _this;
   }
 
@@ -50,16 +46,13 @@ var BootstrapPasswordStrength = function (_Component) {
     value: function handleInput(event) {
       event.preventDefault();
       this.setState({
-        password: event.target.value,
         result: (0, _zxcvbn2.default)(event.target.value)
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _props = this.props;
-      var labelText = _props.labelText;
-      var inputClassName = _props.inputClassName;
+      var labelText = this.props.labelText;
       var result = this.state.result;
 
       var passwordLabel = labelText ? labelText : 'Enter password';
@@ -85,20 +78,23 @@ var BootstrapPasswordStrength = function (_Component) {
           'Very strong'
         ), bsStyle: 'success', now: 100 }];
       var scoreClass = scoreClasses[result ? result.score : 0];
+      var label = _react2.default.createElement(
+        'label',
+        null,
+        passwordLabel
+      );
+
+      var inputProps = Object.assign({}, this.props, {
+        label: label,
+        onInput: this.handleInput,
+        type: 'password',
+        labelText: undefined
+      });
 
       return _react2.default.createElement(
         'section',
         null,
-        _react2.default.createElement(
-          'label',
-          { forHtml: 'password' },
-          passwordLabel
-        ),
-        _react2.default.createElement('input', { className: inputClassName,
-          onInput: this.handleInput,
-          type: 'password',
-          id: 'password' }),
-        _react2.default.createElement(_reactBootstrap.Input, null),
+        _react2.default.createElement(_reactBootstrap.Input, inputProps),
         result && _react2.default.createElement(_reactBootstrap.ProgressBar, scoreClass)
       );
     }
@@ -110,6 +106,5 @@ var BootstrapPasswordStrength = function (_Component) {
 exports.default = BootstrapPasswordStrength;
 
 BootstrapPasswordStrength.propTypes = {
-  labelText: _react2.default.PropTypes.string,
-  inputClassName: _react2.default.PropTypes.string
+  labelText: _react2.default.PropTypes.string
 };

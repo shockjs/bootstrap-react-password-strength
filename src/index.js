@@ -8,28 +8,21 @@ export default class BootstrapPasswordStrength extends Component
   constructor(props)
   {
     super(props);
-
     this.handleInput = this.handleInput.bind(this);
-
-    this.state = {
-      password: props.password
-    };
-
+    this.state = {};
   }
 
   handleInput(event)
   {
     event.preventDefault();
     this.setState({
-      password: event.target.value,
       result: zxcvbn(event.target.value)
     });
-
   }
 
   render()
   {
-    const { labelText, inputClassName } = this.props;
+    const { labelText } = this.props;
     const { result } = this.state;
     const passwordLabel = (labelText) ? labelText : 'Enter password';
     const scoreClasses = [
@@ -40,15 +33,18 @@ export default class BootstrapPasswordStrength extends Component
       { label: <span>Very strong</span>,  bsStyle: 'success', now: 100 }
     ];
     const scoreClass = scoreClasses[result ? result.score : 0];
+    const label = <label>{ passwordLabel }</label>;
+
+    const inputProps = Object.assign({}, this.props, {
+      label: label,
+      onInput: this.handleInput,
+      type: 'password',
+      labelText: undefined
+    });
 
     return(
       <section>
-        <label forHtml="password">{ passwordLabel }</label>
-        <input className={ inputClassName }
-               onInput={ this.handleInput }
-               type="password"
-               id="password" />
-        <Input  />
+        <Input { ...inputProps } />
         { result &&
         <ProgressBar { ...scoreClass } /> }
       </section>
@@ -57,6 +53,5 @@ export default class BootstrapPasswordStrength extends Component
 }
 
 BootstrapPasswordStrength.propTypes = {
-  labelText: React.PropTypes.string,
-  inputClassName: React.PropTypes.string
+  labelText: React.PropTypes.string
 };
